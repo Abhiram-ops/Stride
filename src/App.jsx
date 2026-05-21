@@ -201,7 +201,7 @@ export default function App() {
 
       {/* ── TABS ── */}
       <nav style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.07)', background: '#0e0e17', padding: '0 16px' }}>
-        {['dashboard', 'history', 'insights'].map(t => (
+        {['dashboard', 'history', 'insights', 'plan'].map(t => (
           <button key={t} onClick={() => setTab(t)} style={{
             background: 'none', border: 'none', padding: '11px 16px', fontSize: 13,
             cursor: 'pointer', fontFamily: 'inherit',
@@ -410,6 +410,7 @@ export default function App() {
 
         {/* ════ INSIGHTS ════ */}
         {tab === 'insights' && <Insights data={data} overall={overall} days={days} />}
+        {tab === 'plan' && <Plan />}
 
       </main>
 
@@ -551,5 +552,271 @@ function Insights({ data, overall, days }) {
         })}
       </div>
     </>
+  )
+}
+
+/* ══════════════════════════════════════════════════════
+   PLAN DATA
+══════════════════════════════════════════════════════ */
+const P1_DAYS = [
+  {date:'May 21',day:'Wed',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Take a full diagnostic mock test — all 4 sections',time:'2h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Start Google Cybersecurity course — complete Module 1',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Review existing SOP draft — note what is missing',time:'30m'},
+  ]},
+  {date:'May 22',day:'Thu',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Reading: 2 full passages timed. Review every wrong answer',time:'1h'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Listening: 2 practice sets. Focus on note-taking speed',time:'1h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Module 2: Security domains — notes + quiz',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Update CV — add recent projects and skills',time:'30m'},
+  ]},
+  {date:'May 23',day:'Fri',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Writing Task 1: One graph response, timed 20 mins',time:'45m'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Writing Task 2: One essay timed 40 mins, self-review',time:'1h 15m'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Module 3: Network security basics',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Research 3 target universities — note requirements',time:'30m'},
+  ]},
+  {date:'May 24',day:'Sat',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Speaking: Record Parts 1, 2, 3. Listen back critically',time:'1h'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Vocabulary: Learn 20 academic words + use in sentences',time:'1h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Finish week 1 of course — complete graded quiz',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Draft "Why this university" paragraph for top choice',time:'30m'},
+  ]},
+  {date:'May 25',day:'Sun',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Rest day — re-read your writing mistakes only',time:'45m'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Catch up or review week 1 material',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Revise SOP opening paragraph — strong hook',time:'30m'},
+  ]},
+  {date:'May 26',day:'Mon',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Full mock test 2 — Reading + Listening timed',time:'2h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Module 4: Linux basics',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Braindump all achievements for CV',time:'30m'},
+  ]},
+  {date:'May 27',day:'Tue',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Writing: Rewrite essays using feedback',time:'1h'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Grammar: Identify 3 weakest areas, drill them',time:'1h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Module 5: SQL + databases intro',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Polish CV — format, bullets, action verbs',time:'30m'},
+  ]},
+  {date:'May 28',day:'Wed',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Speaking mock — full 15 min session, record and score',time:'1h'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Reading: Skim and scan drills. Finish passage in 18 mins',time:'1h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Week 2 start — continue course modules',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Research scholarship deadlines for target universities',time:'30m'},
+  ]},
+  {date:'May 29',day:'Thu',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Full mock test 3 — Writing + Speaking recorded',time:'2h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Graded quiz for week 2',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'SOP body: write academic background paragraph',time:'30m'},
+  ]},
+  {date:'May 30',day:'Fri',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Final full mock — all 4 sections, exam conditions',time:'2h 45m'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Light work only — review SOP notes',time:'30m'},
+  ]},
+  {date:'May 31',day:'Sat',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Review mock results — list every weak point',time:'1h'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Targeted drill on weakest section only',time:'1h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Course modules — keep momentum',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'SOP: write career goals paragraph',time:'30m'},
+  ]},
+  {date:'June 1',day:'Sun',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Easy day — vocabulary revision only',time:'1h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Light module review',time:'30m'},
+  ]},
+  {date:'June 2',day:'Mon',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Last reading + listening drill — stay sharp',time:'1h'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Speaking: practice 5 common Part 2 topics',time:'1h'},
+  ]},
+  {date:'June 3',day:'Tue',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Writing: one task each — build confidence',time:'1h 30m'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Vocabulary final review — top 50 words',time:'30m'},
+  ]},
+  {date:'June 4',day:'Wed',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Rest. Light reading only. Sleep well tonight.',time:'30m'},
+  ]},
+  {date:'June 5',day:'Thu',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Exam week — light warm-up only',time:'30m'},
+  ]},
+  {date:'June 6',day:'Fri',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Exam eve — sleep by 10pm. You are ready.',time:'—'},
+  ]},
+  {date:'June 7',day:'Sat',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'IELTS EXAM DAY — go get that 7+',time:'—'},
+  ]},
+]
+
+const P2_DAYS = [
+  {date:'June 8',day:'Sun',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Post-exam rest + catch up on cybersecurity modules',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Braindump: finalise university list',time:'30m'},
+  ]},
+  {date:'June 9',day:'Mon',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Course modules — full focus now IELTS is done',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Finalise university shortlist — max 5 targets',time:'1h 30m'},
+  ]},
+  {date:'June 10',day:'Tue',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Graded assessment + week 3 modules',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'SOP full draft — all sections connected',time:'1h 30m'},
+  ]},
+  {date:'June 11',day:'Wed',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Security tools lab — hands-on practice',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'CV final polish — get someone to review it',time:'1h 30m'},
+  ]},
+  {date:'June 12',day:'Thu',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Course modules — 1 module per day pace',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'SOP revision — cut vague and filler sentences',time:'1h 30m'},
+  ]},
+  {date:'June 13',day:'Fri',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Week 3 quiz + review',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Draft outreach email to professors if needed',time:'1h 30m'},
+  ]},
+  {date:'June 14',day:'Sat',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Catch-up day or advance to week 4',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Set up application portal accounts',time:'1h 30m'},
+  ]},
+  {date:'June 15',day:'Sun',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Rest + light module review',time:'1h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Compile all documents — master checklist',time:'1h'},
+  ]},
+  {date:'June 16',day:'Mon',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Week 4 modules — final stretch',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Submit first university application',time:'1h 30m'},
+  ]},
+  {date:'June 17',day:'Tue',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Course modules + graded quiz',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Tailor SOP for university 2',time:'1h 30m'},
+  ]},
+  {date:'June 18',day:'Wed',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Final project or capstone if applicable',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Submit university 2 application',time:'1h 30m'},
+  ]},
+  {date:'June 19',day:'Thu',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Course completion — final exam',time:'2h'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Apply to remaining universities',time:'1h 30m'},
+  ]},
+  {date:'June 20',day:'Fri',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Download and save certificate',time:'30m'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Final review of all applications submitted',time:'1h'},
+  ]},
+  {date:'June 21',day:'Sat',tasks:[
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Course done — add to LinkedIn and CV',time:'—'},
+    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Profile complete — all applications in',time:'—'},
+  ]},
+]
+
+/* ══════════════════════════════════════════════════════
+   PLAN TAB
+══════════════════════════════════════════════════════ */
+function Plan() {
+  const [activeDay, setActiveDay] = useState(null)
+  const todayDate = todayStr()
+
+  const phases = [
+    { label: 'Phase 1', title: 'IELTS crunch', dates: 'May 21 – June 7', days: P1_DAYS,
+      alloc: [{label:'IELTS practice',pct:55,color:'#f87171',time:'2h'},{label:'Cybersecurity',pct:28,color:'#34d399',time:'1h'},{label:'Uni profile',pct:14,color:'#a78bfa',time:'30m'}] },
+    { label: 'Phase 2', title: 'Cyber + profile sprint', dates: 'June 8 – June 21', days: P2_DAYS,
+      alloc: [{label:'Cybersecurity',pct:55,color:'#34d399',time:'2h'},{label:'Uni profile',pct:42,color:'#a78bfa',time:'1h 30m'},{label:'IELTS review',pct:14,color:'#f87171',time:'30m'}] },
+  ]
+
+  const goalCards = [
+    {icon:'📝', title:'IELTS 7+', meta:'4 skills · ielts-testpro.com', deadline:'Exam: June 1–7', dc:'#f87171'},
+    {icon:'🔐', title:'Google Cybersecurity', meta:'Coursera beginner cert', deadline:'Deadline: June 21', dc:'#34d399'},
+    {icon:'🎓', title:'Uni profile', meta:'SOP · CV · research', deadline:'Deadline: June 21', dc:'#a78bfa'},
+  ]
+
+  return (
+    <div>
+      <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(170px,1fr))', gap:10, marginBottom:20}}>
+        {goalCards.map((g,i) => (
+          <div key={i} style={{background:'#13131f', border:'1px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'12px 14px'}}>
+            <div style={{fontSize:20, marginBottom:6}}>{g.icon}</div>
+            <div style={{fontWeight:600, fontSize:13, marginBottom:2}}>{g.title}</div>
+            <div style={{fontSize:11, color:'#6b6888', marginBottom:4}}>{g.meta}</div>
+            <div style={{fontSize:11, fontWeight:600, color:g.dc}}>{g.deadline}</div>
+          </div>
+        ))}
+      </div>
+
+      {phases.map((phase, pi) => (
+        <div key={pi} style={{marginBottom:24}}>
+          <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:10}}>
+            <span style={{fontSize:11, fontWeight:500, padding:'3px 10px', borderRadius:20, background: pi===0?'rgba(248,113,113,0.12)':'rgba(52,211,153,0.12)', color: pi===0?'#f87171':'#34d399'}}>{phase.label}</span>
+            <div>
+              <div style={{fontSize:14, fontWeight:600}}>{phase.title}</div>
+              <div style={{fontSize:11, color:'#6b6888'}}>{phase.dates}</div>
+            </div>
+          </div>
+
+          <div style={{marginBottom:10}}>
+            {phase.alloc.map((a,i) => (
+              <div key={i} style={{display:'flex', alignItems:'center', gap:8, marginBottom:5}}>
+                <span style={{fontSize:11, color:'#6b6888', width:120, flexShrink:0}}>{a.label}</span>
+                <div style={{flex:1, height:5, background:'rgba(255,255,255,0.07)', borderRadius:3}}>
+                  <div style={{height:'100%', width:a.pct+'%', background:a.color, borderRadius:3}} />
+                </div>
+                <span style={{fontSize:11, color:'#6b6888', width:36, textAlign:'right'}}>{a.time}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(86px,1fr))', gap:6, marginBottom:10}}>
+            {phase.days.map((d, di) => {
+              const key = `${pi}-${di}`
+              const tags = [...new Set(d.tasks.map(t => t.tag))]
+              const isActive = activeDay === key
+              const isToday = d.date === 'May 21'
+              return (
+                <div key={di} onClick={() => setActiveDay(isActive ? null : key)}
+                  style={{background: isActive?'#1d1d2e':'#13131f', border:`1px solid ${isActive?'rgba(167,139,250,0.45)':isToday?'rgba(96,165,250,0.35)':'rgba(255,255,255,0.08)'}`, borderRadius:10, padding:'8px 9px', cursor:'pointer', transition:'border-color .15s'}}>
+                  <div style={{fontSize:10, color:'#6b6888', marginBottom:2}}>{d.date}</div>
+                  <div style={{fontSize:12, fontWeight:600, marginBottom:5}}>{d.day}</div>
+                  <div style={{display:'flex', flexDirection:'column', gap:3}}>
+                    {tags.map(tag => {
+                      const t = d.tasks.find(x => x.tag === tag)
+                      return (
+                        <div key={tag} style={{display:'flex', alignItems:'center', gap:4}}>
+                          <div style={{width:6, height:6, borderRadius:'50%', background:t.color, flexShrink:0}} />
+                          <span style={{fontSize:10, color:'#6b6888'}}>{tag}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+
+          {activeDay && activeDay.startsWith(pi+'-') && (() => {
+            const di = parseInt(activeDay.split('-')[1])
+            const d = phase.days[di]
+            return (
+              <div style={{background:'#13131f', border:'1px solid rgba(167,139,250,0.3)', borderRadius:14, padding:'14px 16px', marginBottom:10}}>
+                <div style={{fontSize:14, fontWeight:600, marginBottom:12, display:'flex', alignItems:'center', gap:8}}>
+                  📅 {d.date} — {d.day}
+                </div>
+                <div style={{display:'flex', flexDirection:'column', gap:8}}>
+                  {d.tasks.map((t, ti) => (
+                    <div key={ti} style={{display:'flex', alignItems:'flex-start', gap:10, background:'rgba(255,255,255,0.03)', borderRadius:10, padding:'8px 10px'}}>
+                      <span style={{fontSize:11, fontWeight:500, padding:'2px 8px', borderRadius:20, background:t.bg, color:t.color, flexShrink:0, whiteSpace:'nowrap'}}>{t.tag}</span>
+                      <div>
+                        <div style={{fontSize:13, lineHeight:1.5}}>{t.text}</div>
+                        <div style={{fontSize:11, color:'#6b6888', marginTop:2}}>{t.time}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
+
+          {pi === 0 && <div style={{height:1, background:'rgba(255,255,255,0.06)', margin:'20px 0'}} />}
+        </div>
+      ))}
+
+      <div style={{background:'#13131f', border:'1px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'14px 16px'}}>
+        <div style={{fontSize:13, fontWeight:600, marginBottom:6}}>Daily check-in</div>
+        <div style={{fontSize:12, color:'#6b6888', lineHeight:1.7}}>Message Claude every morning saying <strong style={{color:'#eae8f5'}}>"Day check-in"</strong> and get your exact tasks, progress check, and a push if you're falling behind.</div>
+      </div>
+    </div>
   )
 }
