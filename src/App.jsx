@@ -201,7 +201,7 @@ export default function App() {
 
       {/* ── TABS ── */}
       <nav style={{ display: 'flex', borderBottom: '1px solid rgba(255,255,255,0.07)', background: '#0e0e17', padding: '0 16px' }}>
-        {['dashboard', 'history', 'insights', 'plan'].map(t => (
+        {['dashboard', 'history', 'insights', 'plan', 'tips'].map(t => (
           <button key={t} onClick={() => setTab(t)} style={{
             background: 'none', border: 'none', padding: '11px 16px', fontSize: 13,
             cursor: 'pointer', fontFamily: 'inherit',
@@ -411,6 +411,7 @@ export default function App() {
         {/* ════ INSIGHTS ════ */}
         {tab === 'insights' && <Insights data={data} overall={overall} days={days} />}
         {tab === 'plan' && <Plan />}
+        {tab === 'tips' && <Tips />}
 
       </main>
 
@@ -565,10 +566,10 @@ const P1_DAYS = [
     {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Review existing SOP draft — note what is missing',time:'30m'},
   ]},
   {date:'May 22',day:'Thu',tasks:[
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Reading: 2 full passages timed. Review every wrong answer',time:'1h'},
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Listening: 2 practice sets. Focus on note-taking speed',time:'1h'},
-    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Module 2: Security domains — notes + quiz',time:'1h'},
-    {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'Update CV — add recent projects and skills',time:'30m'},
+    {tag:'Writing',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',text:'Task 1 — Cambridge 14 graph/chart. 10m plan + 35m write. Compare with model answer word by word',time:'45m'},
+    {tag:'Writing',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',text:'Task 2 — Essay: 10m plan (PEEL) + 40m write + 10m self-review against 4 scoring criteria',time:'1h'},
+    {tag:'Speaking',color:'#f472b6',bg:'rgba(244,114,182,0.12)',text:'Part 1: Record 5 answers, play back, improve. Part 2: Cue card 2 full mins. Part 3: 3-4 sentence answers',time:'1h'},
+    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Module 2: Security domains intro — light session only',time:'30m'},
   ]},
   {date:'May 23',day:'Fri',tasks:[
     {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Writing Task 1: One graph response, timed 20 mins',time:'45m'},
@@ -817,6 +818,165 @@ function Plan() {
         <div style={{fontSize:13, fontWeight:600, marginBottom:6}}>Daily check-in</div>
         <div style={{fontSize:12, color:'#6b6888', lineHeight:1.7}}>Message Claude every morning saying <strong style={{color:'#eae8f5'}}>"Day check-in"</strong> and get your exact tasks, progress check, and a push if you're falling behind.</div>
       </div>
+    </div>
+  )
+}
+
+/* ══════════════════════════════════════════════════════
+   TIPS TAB
+══════════════════════════════════════════════════════ */
+const TIPS_DATA = [
+  {
+    id: 'writing-t1',
+    section: 'Writing',
+    title: 'Task 1 — Graphs & Charts',
+    color: '#fbbf24',
+    bg: 'rgba(251,191,36,0.12)',
+    icon: '📊',
+    tips: [
+      { heading: 'Never start with "The graph shows…"', body: 'Examiners see it 100 times a day. Paraphrase the title completely. Try: "It is evident from the data that…" or "The chart illustrates a clear trend in…"' },
+      { heading: '4-paragraph structure — always', body: '① Intro (paraphrase title) ② Overview (2 main trends — NO data here) ③ Detail paragraph 1 ④ Detail paragraph 2. The overview is worth the most — never skip it.' },
+      { heading: 'Compare, don\'t just describe', body: 'Instead of describing each line separately, link them: "While X rose sharply over the period, Y remained relatively stable." This alone pushes you from band 6 to 7.' },
+      { heading: 'Word count sweet spot', body: '150 words minimum. 170–185 is ideal. Going over 200 wastes time you need for Task 2.' },
+      { heading: 'Vary your language for numbers', body: 'Increase → surge, climb, shoot up, rise steadily. Decrease → plummet, decline, drop sharply, fall gradually. Stable → plateau, level off, remain constant.' },
+    ]
+  },
+  {
+    id: 'writing-t2',
+    section: 'Writing',
+    title: 'Task 2 — Essays',
+    color: '#fbbf24',
+    bg: 'rgba(251,191,36,0.12)',
+    icon: '✍️',
+    tips: [
+      { heading: 'Spend 10 mins planning — non-negotiable', body: 'Students who skip planning write themselves into a corner by paragraph 2. Note your position, 2 main points, 1 example each. 10 mins planning saves 20 mins of rambling.' },
+      { heading: 'PEEL every body paragraph', body: 'Point → Explain → Example → Link back to question. One idea per paragraph, fully developed. Two shallow paragraphs score worse than one deep one.' },
+      { heading: '4 scoring criteria — equal weight', body: 'Task Achievement · Coherence & Cohesion · Lexical Resource · Grammar Range & Accuracy. Most people only think about vocabulary. Coherence (how ideas connect) is where most band 6s lose marks.' },
+      { heading: 'Word count sweet spot', body: '250 words minimum. 270–290 is ideal. Never go under 250 — automatic band reduction. Don\'t go over 320 — quality drops, examiner notices.' },
+      { heading: 'Hedging language — examiners love this', body: '"It could be argued that…" / "There is a strong case for…" / "While some may contend that… it is widely accepted that…" This shows academic register and pushes Lexical Resource score up.' },
+      { heading: 'Avoid these common mistakes', body: '✗ Starting conclusion with "In a nutshell" (too informal). ✗ Using "nowadays" 4 times. ✗ Writing your real opinion in "discuss both views" essays. ✗ Forgetting to answer the actual question in the conclusion.' },
+    ]
+  },
+  {
+    id: 'speaking-p1',
+    section: 'Speaking',
+    title: 'Part 1 — Introduction & Interview',
+    color: '#f472b6',
+    bg: 'rgba(244,114,182,0.12)',
+    icon: '🎙️',
+    tips: [
+      { heading: 'Always extend your answer', body: 'Never give one-word answers. Formula: Answer + Reason + Example. "I enjoy reading — mainly because it helps me unwind after a busy day. For instance, I usually read for 30 minutes before bed."' },
+      { heading: 'Fluency beats accuracy', body: 'A smooth answer with one grammar mistake scores higher than a perfectly correct robotic one. Keep talking, don\'t freeze up to find the perfect word.' },
+      { heading: 'Cut these phrases immediately', body: '✗ "So basically…" ✗ "As per my knowledge…" ✗ "I think that in my opinion…" ✗ "Good question!" — All of these scream rehearsed and drop your score.' },
+      { heading: 'Vary your tense', body: 'Examiners check grammar range. Mix present simple, present perfect, past simple naturally: "I\'ve always enjoyed…", "When I was younger I used to…", "These days I tend to…"' },
+    ]
+  },
+  {
+    id: 'speaking-p2',
+    section: 'Speaking',
+    title: 'Part 2 — Long Turn (Cue Card)',
+    color: '#f472b6',
+    bg: 'rgba(244,114,182,0.12)',
+    icon: '🗣️',
+    tips: [
+      { heading: 'Use 1 minute prep time for bullet points only', body: 'Note 5 keywords — not full sentences. Then speak around each for 20–25 seconds. Full sentences in notes = you\'ll just read them out, which kills fluency score.' },
+      { heading: 'Speak for the full 2 minutes', body: 'Stop before 1 min 45s = examiner marks you down. Go past 2 min = examiner cuts you off mid-sentence, which is fine. Aim to still be talking when they stop you.' },
+      { heading: 'Structure it like a story', body: 'When/Where → What happened → Who was involved → How it made you feel → Why it matters to you. This naturally fills 2 minutes and sounds coherent.' },
+      { heading: 'If you go blank, zoom out', body: 'If you forget what to say, zoom out to a related idea: "…and this actually reminds me of something broader about how people in India…" Buys you 10 seconds and keeps fluency intact.' },
+    ]
+  },
+  {
+    id: 'speaking-p3',
+    section: 'Speaking',
+    title: 'Part 3 — Discussion',
+    color: '#f472b6',
+    bg: 'rgba(244,114,182,0.12)',
+    icon: '💬',
+    tips: [
+      { heading: 'Think out loud to buy time', body: '"That\'s quite a complex issue — I\'d say…" / "It depends on the context, but generally speaking…" Sounds natural, gives you 3–4 seconds, and shows discourse management.' },
+      { heading: 'Give 3-4 sentence answers minimum', body: 'Part 3 is about depth. Position → Reason → Example → Concession (or alternative view). "While some people argue X, I believe Y because… For instance… That said, Z is also worth considering."' },
+      { heading: 'Use discourse markers', body: '"Furthermore…" / "On the other hand…" / "What\'s particularly interesting is…" / "To a large extent…" These push your Coherence score up significantly.' },
+      { heading: 'Don\'t be afraid to disagree', body: 'Examiners are not judging your opinions — they\'re judging your English. Taking a strong position and defending it clearly scores higher than giving a vague "it depends" answer.' },
+    ]
+  },
+  {
+    id: 'vocab',
+    section: 'Vocabulary',
+    title: 'High-Score Vocabulary Swaps',
+    color: '#a78bfa',
+    bg: 'rgba(167,139,250,0.12)',
+    icon: '💡',
+    tips: [
+      { heading: 'Replace weak verbs', body: 'increase → surge, escalate, soar | decrease → plummet, dwindle, contract | show → illustrate, demonstrate, highlight | think → contend, argue, maintain, assert' },
+      { heading: 'Replace weak adjectives', body: 'important → crucial, pivotal, fundamental, paramount | big → substantial, considerable, significant | small → marginal, negligible, modest | good → beneficial, advantageous, favourable' },
+      { heading: 'Academic sentence starters', body: '"It is widely acknowledged that…" / "A growing body of evidence suggests…" / "The extent to which X influences Y is debatable…" / "Contrary to popular belief…"' },
+      { heading: 'Collocations that examiners reward', body: 'tackle a problem (not solve) | raise awareness (not increase) | have a profound impact (not big effect) | address an issue (not fix) | draw a conclusion (not make)' },
+    ]
+  },
+  {
+    id: 'cambridge',
+    section: 'Strategy',
+    title: 'Cambridge Books — How to Use Them',
+    color: '#60a5fa',
+    bg: 'rgba(96,165,250,0.12)',
+    icon: '📚',
+    tips: [
+      { heading: 'Books 11–18 only for your prep', body: 'Books 1–10 have slightly outdated question types. Books 11–18 match the current 2026 exam pattern exactly. Start at 14, finish at 18.' },
+      { heading: 'Writing & Speaking topics repeat', body: 'Listening and Reading passages never repeat. But Writing Task 2 essay topics and Speaking cue card topics DO get reused. Practising Cambridge essays = real chance of seeing the same topic.' },
+      { heading: 'Best free online access', body: 'practice9.co has Cambridge 11–20 digitised in computer-based format — identical to the real CBT interface. Use Simulation mode, not Practice mode.' },
+      { heading: 'After every mock — 3-step review', body: '① Note every wrong answer and why. ② Look up the vocabulary you didn\'t know. ③ Log your band score in Stride. No review = wasted test.' },
+    ]
+  },
+]
+
+function Tips() {
+  const [active, setActive] = useState('writing-t1')
+  const sections = [...new Set(TIPS_DATA.map(t => t.section))]
+  const activeCard = TIPS_DATA.find(t => t.id === active)
+
+  return (
+    <div>
+      <div style={{ fontSize: 11, color: '#6b6888', textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: 12 }}>
+        Exam tips — tap any card to expand
+      </div>
+
+      {sections.map(sec => (
+        <div key={sec} style={{ marginBottom: 20 }}>
+          <div style={{ fontSize: 11, color: '#6b6888', textTransform: 'uppercase', letterSpacing: '.1em', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {sec}
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.06)' }} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))', gap: 8 }}>
+            {TIPS_DATA.filter(t => t.section === sec).map(card => (
+              <div key={card.id} onClick={() => setActive(active === card.id ? null : card.id)}
+                style={{ background: active === card.id ? '#1d1d2e' : '#13131f', border: `1px solid ${active === card.id ? card.color + '55' : 'rgba(255,255,255,0.08)'}`, borderRadius: 12, padding: '11px 13px', cursor: 'pointer', transition: 'all .15s' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                  <span style={{ fontSize: 18 }}>{card.icon}</span>
+                  <span style={{ fontSize: 13, fontWeight: 600 }}>{card.title}</span>
+                </div>
+                <div style={{ fontSize: 11, color: '#6b6888' }}>{card.tips.length} tips inside</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+
+      {activeCard && (
+        <div style={{ background: '#13131f', border: `1px solid ${activeCard.color}44`, borderRadius: 14, padding: '16px 18px', marginTop: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <span style={{ fontSize: 20 }}>{activeCard.icon}</span>
+            <span style={{ fontSize: 15, fontWeight: 700 }}>{activeCard.title}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {activeCard.tips.map((tip, i) => (
+              <div key={i} style={{ background: 'rgba(255,255,255,0.03)', borderRadius: 10, padding: '10px 12px', borderLeft: `3px solid ${activeCard.color}` }}>
+                <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 5, color: activeCard.color }}>{tip.heading}</div>
+                <div style={{ fontSize: 13, color: '#b0adc8', lineHeight: 1.65 }}>{tip.body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
