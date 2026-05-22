@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 
 /* ─── CONFIG ──────────────────────────────────────────── */
-const EXAM_DATE = new Date('2026-05-30T00:00:00')
+const EXAM_DATE = new Date('2026-06-07T00:00:00')
 
 const MODULES = [
   { id: 'listening',  name: 'Listening',  icon: '🎧', color: '#60a5fa', target: 7   },
@@ -158,7 +158,7 @@ export default function App() {
             IELTS Prep Tracker
           </div>
           <div style={{ fontSize: 18, fontWeight: 700 }}>
-            May 30, 2026{' '}
+            June 7, 2026{' '}
             <span style={{ color: days <= 5 ? '#fbbf24' : '#6b6888', fontWeight: 400 }}>· {days} days left</span>
           </div>
         </div>
@@ -620,26 +620,29 @@ const P1_DAYS = [
     {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Course modules — keep momentum',time:'1h'},
     {tag:'Uni',color:'#a78bfa',bg:'rgba(167,139,250,0.12)',text:'SOP: write career goals paragraph',time:'30m'},
   ]},
-  {date:'June 1',day:'Sun',tasks:[
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Easy day — vocabulary revision only',time:'1h'},
-    {tag:'Cyber',color:'#34d399',bg:'rgba(52,211,153,0.12)',text:'Light module review',time:'30m'},
+  {date:'June 1',day:'Mon',tasks:[
+    {tag:'Writing',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',text:'Task 2 full essay — Cambridge 15 topic. Strict 50 mins total (10 plan + 40 write). Self-score against 4 criteria',time:'1h'},
+    {tag:'Writing',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',text:'Task 1 — bar chart or line graph. 20 mins timed. Compare with model answer, note vocabulary gaps',time:'30m'},
+    {tag:'Speaking',color:'#f472b6',bg:'rgba(244,114,182,0.12)',text:'Part 2 cue card drill — 3 different topics, 2 mins each recorded. Play back and note filler words',time:'30m'},
   ]},
-  {date:'June 2',day:'Mon',tasks:[
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Last reading + listening drill — stay sharp',time:'1h'},
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Speaking: practice 5 common Part 2 topics',time:'1h'},
+  {date:'June 2',day:'Tue',tasks:[
+    {tag:'Writing',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',text:'Task 2 rewrite — take your weakest essay so far and rewrite it from scratch using PEEL structure',time:'1h'},
+    {tag:'Speaking',color:'#f472b6',bg:'rgba(244,114,182,0.12)',text:'Part 1 + Part 3 back to back — record full session, focus on extending every answer naturally',time:'45m'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Reading: 1 timed passage — Cambridge 16. Stay under 18 mins',time:'20m'},
   ]},
-  {date:'June 3',day:'Tue',tasks:[
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Writing: one task each — build confidence',time:'1h 30m'},
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Vocabulary final review — top 50 words',time:'30m'},
+  {date:'June 3',day:'Wed',tasks:[
+    {tag:'Writing',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',text:'Full Writing section — Task 1 (20m) + Task 2 (40m) back to back, exam conditions. No breaks.',time:'1h'},
+    {tag:'Speaking',color:'#f472b6',bg:'rgba(244,114,182,0.12)',text:'Full speaking mock — Parts 1, 2, 3 recorded. Score yourself on fluency, vocab, grammar, pronunciation',time:'45m'},
   ]},
-  {date:'June 4',day:'Wed',tasks:[
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Rest. Light reading only. Sleep well tonight.',time:'30m'},
+  {date:'June 4',day:'Thu',tasks:[
+    {tag:'Writing',color:'#fbbf24',bg:'rgba(251,191,36,0.12)',text:'Vocabulary drill — replace all weak words in your last essay. Reread examiner model answers from Cambridge 17',time:'45m'},
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Listening: 2 practice sets — note every mistake, do not skip the review',time:'45m'},
   ]},
-  {date:'June 5',day:'Thu',tasks:[
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Exam week — light warm-up only',time:'30m'},
+  {date:'June 5',day:'Fri',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Final full mock — Cambridge 18, all 4 sections, strict exam conditions. Log score in Stride.',time:'2h 45m'},
   ]},
-  {date:'June 6',day:'Fri',tasks:[
-    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Exam eve — sleep by 10pm. You are ready.',time:'—'},
+  {date:'June 6',day:'Sat',tasks:[
+    {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'Exam eve — light review of your top 50 vocabulary words and 3 speaking topics only. Sleep by 10pm.',time:'30m'},
   ]},
   {date:'June 7',day:'Sat',tasks:[
     {tag:'IELTS',color:'#f87171',bg:'rgba(248,113,113,0.12)',text:'IELTS EXAM DAY — go get that 7+',time:'—'},
@@ -720,7 +723,7 @@ function Plan() {
   ]
 
   const goalCards = [
-    {icon:'📝', title:'IELTS 7+', meta:'4 skills · ielts-testpro.com', deadline:'Exam: June 1–7', dc:'#f87171'},
+    {icon:'📝', title:'IELTS 7+', meta:'4 skills · ielts-testpro.com', deadline:'Exam: June 7, 2026', dc:'#f87171'},
     {icon:'🔐', title:'Google Cybersecurity', meta:'Coursera beginner cert', deadline:'Deadline: June 21', dc:'#34d399'},
     {icon:'🎓', title:'Uni profile', meta:'SOP · CV · research', deadline:'Deadline: June 21', dc:'#a78bfa'},
   ]
