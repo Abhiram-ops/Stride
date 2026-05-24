@@ -711,14 +711,41 @@ const P2_DAYS = [
 /* ══════════════════════════════════════════════════════
    PLAN TAB
 ══════════════════════════════════════════════════════ */
+const PLAN_KEY = 'stride_plan_done'
+
+const loadDone = () => {
+  try { const r = localStorage.getItem(PLAN_KEY); return r ? JSON.parse(r) : {} } catch { return {} }
+}
+const saveDone = (d) => {
+  try { localStorage.setItem(PLAN_KEY, JSON.stringify(d)) } catch {}
+}
+
 function Plan() {
   const [activeDay, setActiveDay] = useState(null)
+  const [done, setDone] = useState(loadDone)
   const todayDate = todayStr()
 
+  const toggleTask = (e, key, ti) => {
+    e.stopPropagation()
+    const taskKey = `${key}-${ti}`
+    setDone(prev => {
+      const next = { ...prev, [taskKey]: !prev[taskKey] }
+      saveDone(next)
+      return next
+    })
+  }
+
+  const phaseProgress = (days, phaseKey) => {
+    const total = days.reduce((a, d) => a + d.tasks.length, 0)
+    const completed = days.reduce((a, d, di) =>
+      a + d.tasks.filter((_, ti) => done[`${phaseKey}-${di}-${ti}`]).length, 0)
+    return { total, completed, pct: total ? Math.round((completed / total) * 100) : 0 }
+  }
+
   const phases = [
-    { label: 'Phase 1', title: 'IELTS crunch', dates: 'May 21 – June 7', days: P1_DAYS,
+    { label: 'Phase 1', title: 'IELTS crunch', dates: 'May 21 – June 7', days: P1_DAYS, key: 'p1',
       alloc: [{label:'IELTS practice',pct:55,color:'#f87171',time:'2h'},{label:'Cybersecurity',pct:28,color:'#34d399',time:'1h'},{label:'Uni profile',pct:14,color:'#a78bfa',time:'30m'}] },
-    { label: 'Phase 2', title: 'Cyber + profile sprint', dates: 'June 8 – June 21', days: P2_DAYS,
+    { label: 'Phase 2', title: 'Cyber + profile sprint', dates: 'June 8 – June 21', days: P2_DAYS, key: 'p2',
       alloc: [{label:'Cybersecurity',pct:55,color:'#34d399',time:'2h'},{label:'Uni profile',pct:42,color:'#a78bfa',time:'1h 30m'},{label:'IELTS review',pct:14,color:'#f87171',time:'30m'}] },
   ]
 
@@ -741,13 +768,21 @@ function Plan() {
         ))}
       </div>
 
-      {phases.map((phase, pi) => (
+      {phases.map((phase, pi) => {
+        const prog = phaseProgress(phase.days, `${pi}`)
+        return (
         <div key={pi} style={{marginBottom:24}}>
           <div style={{display:'flex', alignItems:'center', gap:10, marginBottom:10}}>
             <span style={{fontSize:11, fontWeight:500, padding:'3px 10px', borderRadius:20, background: pi===0?'rgba(248,113,113,0.12)':'rgba(52,211,153,0.12)', color: pi===0?'#f87171':'#34d399'}}>{phase.label}</span>
             <div>
               <div style={{fontSize:14, fontWeight:600}}>{phase.title}</div>
               <div style={{fontSize:11, color:'#6b6888'}}>{phase.dates}</div>
+            </div>
+            <div style={{marginLeft:'auto', textAlign:'right'}}>
+              <div style={{fontSize:11, color:'#6b6888', marginBottom:3}}>{prog.completed}/{prog.total} tasks · {prog.pct}%</div>
+              <div style={{width:80, height:4, background:'rgba(255,255,255,0.07)', borderRadius:2}}>
+                <div style={{height:'100%', width:prog.pct+'%', background: pi===0?'#f87171':'#34d399', borderRadius:2, transition:'width .4s'}} />
+              </div>
             </div>
           </div>
 
@@ -768,11 +803,14 @@ function Plan() {
               const key = `${pi}-${di}`
               const tags = [...new Set(d.tasks.map(t => t.tag))]
               const isActive = activeDay === key
-              const isToday = d.date === 'May 21'
+              const allDone = d.tasks.every((_,ti) => done[`${key}-${ti}`])
               return (
                 <div key={di} onClick={() => setActiveDay(isActive ? null : key)}
-                  style={{background: isActive?'#1d1d2e':'#13131f', border:`1px solid ${isActive?'rgba(167,139,250,0.45)':isToday?'rgba(96,165,250,0.35)':'rgba(255,255,255,0.08)'}`, borderRadius:10, padding:'8px 9px', cursor:'pointer', transition:'border-color .15s'}}>
-                  <div style={{fontSize:10, color:'#6b6888', marginBottom:2}}>{d.date}</div>
+                  style={{background: isActive?'#1d1d2e':'#13131f', border:`1px solid ${allDone?'rgba(52,211,153,0.45)':isActive?'rgba(167,139,250,0.45)':'rgba(255,255,255,0.08)'}`, borderRadius:10, padding:'8px 9px', cursor:'pointer', transition:'border-color .15s'}}>
+                  <div style={{display:'flex', justifyContent:'space-between', marginBottom:2}}>
+                    <div style={{fontSize:10, color:'#6b6888'}}>{d.date}</div>
+                    {allDone && <span style={{fontSize:10, color:'#34d399'}}>✓</span>}
+                  </div>
                   <div style={{fontSize:12, fontWeight:600, marginBottom:5}}>{d.day}</div>
                   <div style={{display:'flex', flexDirection:'column', gap:3}}>
                     {tags.map(tag => {
@@ -793,21 +831,27 @@ function Plan() {
           {activeDay && activeDay.startsWith(pi+'-') && (() => {
             const di = parseInt(activeDay.split('-')[1])
             const d = phase.days[di]
+            const key = `${pi}-${di}`
             return (
               <div style={{background:'#13131f', border:'1px solid rgba(167,139,250,0.3)', borderRadius:14, padding:'14px 16px', marginBottom:10}}>
                 <div style={{fontSize:14, fontWeight:600, marginBottom:12, display:'flex', alignItems:'center', gap:8}}>
                   📅 {d.date} — {d.day}
                 </div>
                 <div style={{display:'flex', flexDirection:'column', gap:8}}>
-                  {d.tasks.map((t, ti) => (
-                    <div key={ti} style={{display:'flex', alignItems:'flex-start', gap:10, background:'rgba(255,255,255,0.03)', borderRadius:10, padding:'8px 10px'}}>
-                      <span style={{fontSize:11, fontWeight:500, padding:'2px 8px', borderRadius:20, background:t.bg, color:t.color, flexShrink:0, whiteSpace:'nowrap'}}>{t.tag}</span>
-                      <div>
+                  {d.tasks.map((t, ti) => {
+                    const isDone = !!done[`${key}-${ti}`]
+                    return (
+                    <div key={ti} style={{display:'flex', alignItems:'flex-start', gap:10, background: isDone?'rgba(52,211,153,0.06)':'rgba(255,255,255,0.03)', borderRadius:10, padding:'8px 10px', border:`0.5px solid ${isDone?'rgba(52,211,153,0.2)':'transparent'}`}}>
+                      <button onClick={(e) => toggleTask(e, key, ti)} title="Mark done" style={{width:20, height:20, borderRadius:'50%', border:`1.5px solid ${isDone?'#34d399':'rgba(255,255,255,0.2)'}`, background:isDone?'#34d399':'transparent', color:'#0c0c14', fontSize:11, cursor:'pointer', flexShrink:0, marginTop:2}}>
+                        {isDone?'✓':''}
+                      </button>
+                      <span style={{fontSize:11, fontWeight:500, padding:'2px 8px', borderRadius:20, background:t.bg, color:t.color, flexShrink:0, whiteSpace:'nowrap', opacity: isDone?0.5:1}}>{t.tag}</span>
+                      <div style={{opacity: isDone?0.5:1}}>
                         <div style={{fontSize:13, lineHeight:1.5}}>{t.text}</div>
                         <div style={{fontSize:11, color:'#6b6888', marginTop:2}}>{t.time}</div>
                       </div>
                     </div>
-                  ))}
+                  )})}
                 </div>
               </div>
             )
@@ -815,7 +859,8 @@ function Plan() {
 
           {pi === 0 && <div style={{height:1, background:'rgba(255,255,255,0.06)', margin:'20px 0'}} />}
         </div>
-      ))}
+        )
+      })}
 
       <div style={{background:'#13131f', border:'1px solid rgba(255,255,255,0.08)', borderRadius:14, padding:'14px 16px'}}>
         <div style={{fontSize:13, fontWeight:600, marginBottom:6}}>Daily check-in</div>
